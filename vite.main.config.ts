@@ -9,7 +9,7 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      external: ['electron', 'sql.js'],
+      external: ['electron'],
     },
   },
 });

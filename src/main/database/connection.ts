@@ -1,5 +1,5 @@
 import { app } from 'electron';
-import initSqlJs, { type Database } from 'sql.js';
+import type { Database } from 'sql.js';
 import path from 'path';
 import fs from 'fs';
 import { runMigrations } from './migrations';
@@ -7,14 +7,30 @@ import { runMigrations } from './migrations';
 let db: Database | null = null;
 let dbPath: string = '';
 
+function getSqlJsPath(): string {
+  const candidates = [
+    // Development: node_modules relative to project root
+    path.join(app.getAppPath(), 'node_modules', 'sql.js', 'dist', 'sql-wasm.js'),
+    // Development: app.getAppPath() may be inside .vite/build/
+    path.resolve(app.getAppPath(), '..', '..', 'node_modules', 'sql.js', 'dist', 'sql-wasm.js'),
+    // Production: copied into asar by afterCopy hook
+    path.join(app.getAppPath(), 'node_modules', 'sql.js', 'dist', 'sql-wasm.js'),
+  ];
+
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) return candidate;
+  }
+
+  throw new Error(`sql-wasm.js not found. Searched: ${candidates.join(', ')}`);
+}
+
 function getWasmPath(): string {
-  // Try multiple locations to find the WASM file
   const candidates = [
     // Development: node_modules relative to project root
     path.join(app.getAppPath(), 'node_modules', 'sql.js', 'dist', 'sql-wasm.wasm'),
-    // Development: app.getAppPath() may be inside .vite/build/, go up to project root
+    // Development: app.getAppPath() may be inside .vite/build/
     path.resolve(app.getAppPath(), '..', '..', 'node_modules', 'sql.js', 'dist', 'sql-wasm.wasm'),
-    // Production: packaged alongside the app
+    // Production: packaged as extraResource
     path.join(process.resourcesPath ?? '', 'sql-wasm.wasm'),
   ];
 
@@ -26,6 +42,15 @@ function getWasmPath(): string {
 }
 
 export async function initDatabase(): Promise<void> {
+  // Load sql.js at runtime via dynamic require to avoid Vite bundling
+  // Emscripten-generated CJS code that breaks when processed by Rollup
+  const sqlJsPath = getSqlJsPath();
+  // Use Function constructor to get a clean require that Vite won't transform
+  const nodeRequire = typeof require !== 'undefined'
+    ? require
+    : Function('return require')() as NodeRequire;
+  const initSqlJs = nodeRequire(sqlJsPath);
+
   const wasmPath = getWasmPath();
   const wasmBinary = fs.readFileSync(wasmPath);
 

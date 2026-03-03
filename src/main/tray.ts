@@ -46,7 +46,7 @@ export class TrayManager {
   private getIconPath(): string {
     // In production, icons are in the resources folder
     if (app.isPackaged) {
-      return path.join(process.resourcesPath, 'assets', 'icons', 'iconTemplate.png');
+      return path.join(process.resourcesPath, 'icons', 'iconTemplate.png');
     }
     return path.join(app.getAppPath(), 'assets', 'icons', 'iconTemplate.png');
   }
