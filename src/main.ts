@@ -3,8 +3,10 @@ import { TrayManager } from './main/tray';
 import { registerIpcHandlers } from './main/ipc/handlers';
 import { initDatabase, closeDatabase } from './main/database/connection';
 
-// Hide dock icon (menu bar app only)
-app.dock?.hide();
+// Hide dock icon (macOS only — menu bar app)
+if (process.platform === 'darwin') {
+  app.dock?.hide();
+}
 
 // Single instance lock
 const gotTheLock = app.requestSingleInstanceLock();

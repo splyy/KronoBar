@@ -52,6 +52,7 @@ const config: ForgeConfig = {
   makers: [
     new MakerZIP({}, ['darwin', 'win32']),
     new MakerSquirrel({
+      name: 'KronoBar',
       setupIcon: 'assets/icons/icon.ico',
     }),
   ],

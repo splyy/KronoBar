@@ -37,7 +37,11 @@ export class TrayManager {
 
   private createTray(): Tray {
     const iconPath = this.getIconPath();
-    const icon = nativeImage.createFromPath(iconPath);
+    let icon = nativeImage.createFromPath(iconPath);
+    // Windows tray icons should be 16x16
+    if (process.platform === 'win32') {
+      icon = icon.resize({ width: 16, height: 16 });
+    }
     const tray = new Tray(icon);
     tray.setToolTip('KronoBar');
     return tray;
@@ -47,7 +51,6 @@ export class TrayManager {
     const isMac = process.platform === 'darwin';
     const iconName = isMac ? 'iconTemplate.png' : 'icon.png';
 
-    // In production, icons are in the resources folder
     if (app.isPackaged) {
       return path.join(process.resourcesPath, 'icons', iconName);
     }
@@ -56,7 +59,6 @@ export class TrayManager {
 
   private createWindow(): BrowserWindow {
     const savedSize = this.loadWindowSize();
-
     const isMac = process.platform === 'darwin';
 
     const window = new BrowserWindow({
@@ -156,7 +158,7 @@ export class TrayManager {
     });
     const workArea = display.workArea;
 
-    // Center horizontally under tray icon
+    // Center horizontally on tray icon
     let x = Math.round(trayBounds.x + trayBounds.width / 2 - windowBounds.width / 2);
 
     let y: number;
@@ -168,7 +170,7 @@ export class TrayManager {
       y = Math.round(trayBounds.y - windowBounds.height);
     }
 
-    // Clamp to display bounds
+    // Clamp to work area bounds
     x = Math.max(workArea.x, Math.min(x, workArea.x + workArea.width - windowBounds.width));
     y = Math.max(workArea.y, Math.min(y, workArea.y + workArea.height - windowBounds.height));
 
