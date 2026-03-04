@@ -16,9 +16,11 @@
   <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT License" />
 </p>
 
-> **Note**: This is a personal project built to experiment with Electron, React, and SQLite. Bug reports and feature suggestions are welcome — I'll do my best to address them, but I make no long-term guarantees. The app and its behavior may change at any time without notice.
+> **Note**: This is a personal project built to experiment with Electron, React, and SQLite. Bug reports and feature suggestions are welcome — I'll do my best to address them, but I make no long-term guarantees. The app and its behavior may change at any time without notice
 
-<video src="assets/demo.mp4" width="400" autoplay loop muted></video>
+
+https://github.com/user-attachments/assets/13161de8-df31-4d25-b885-219cbc227b1a
+
 
 ## Features
 
