@@ -92,6 +92,9 @@ typings/
 out/
 dist/
 
+# Dev database
+.dev-data/
+
 # IDE
 .idea/
 

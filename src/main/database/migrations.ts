@@ -76,17 +76,18 @@ export function runMigrations(db: Database): void {
   const pending = migrations.filter((m) => m.version > currentVersion);
   if (pending.length === 0) return;
 
-  db.run('BEGIN TRANSACTION');
-  try {
-    for (const migration of pending) {
+  for (const migration of pending) {
+    db.run('BEGIN TRANSACTION');
+    try {
       for (const sql of migration.sql) {
         db.run(sql);
       }
-      db.run(`PRAGMA user_version = ${migration.version}`);
+      db.run('COMMIT');
+    } catch (e) {
+      db.run('ROLLBACK');
+      throw e;
     }
-    db.run('COMMIT');
-  } catch (e) {
-    db.run('ROLLBACK');
-    throw e;
+    // PRAGMA must be outside transaction to be persisted
+    db.run(`PRAGMA user_version = ${migration.version}`);
   }
 }

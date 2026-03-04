@@ -56,7 +56,20 @@ export async function initDatabase(): Promise<void> {
 
   const SQL = await initSqlJs({ wasmBinary });
 
-  dbPath = path.join(app.getPath('userData'), 'kronobar.db');
+  // In dev mode, use a local DB in the project directory to avoid overwriting production data
+  if (!app.isPackaged) {
+    let root = app.getAppPath();
+    console.log('[KronoBar] app.getAppPath():', root);
+    if (!fs.existsSync(path.join(root, 'package.json'))) {
+      root = path.resolve(root, '..', '..');
+    }
+    const devDir = path.join(root, '.dev-data');
+    fs.mkdirSync(devDir, { recursive: true });
+    dbPath = path.join(devDir, 'kronobar.db');
+  } else {
+    dbPath = path.join(app.getPath('userData'), 'kronobar.db');
+  }
+  console.log('[KronoBar] DB path:', dbPath, '| exists:', fs.existsSync(dbPath));
 
   // Load existing DB or create new
   if (fs.existsSync(dbPath)) {
