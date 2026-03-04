@@ -21,7 +21,6 @@
 
 https://github.com/user-attachments/assets/13161de8-df31-4d25-b885-219cbc227b1a
 
-
 ## Features
 
 - **Menu bar app** — Always one click away, lives in the macOS tray
@@ -35,6 +34,8 @@ https://github.com/user-attachments/assets/13161de8-df31-4d25-b885-219cbc227b1a
 - **Launch at login** — Start automatically with macOS
 - **Local data** — Everything stays on your machine (SQLite)
 - **Dark mode** — Native macOS dark theme
+
+<p align="center"><img src="assets/screenshot-1.png" width="150" alt="Today" /><img src="assets/screenshot-2.png" width="150" alt="New entry" /><img src="assets/screenshot-3.png" width="150" alt="History" /><img src="assets/screenshot-4.png" width="150" alt="Stats" /><img src="assets/screenshot-5.png" width="150" alt="Settings" /></p>
 
 ## Installation
 
