@@ -1,6 +1,6 @@
 .content {
-  background: rgba(30, 30, 30, 0.92);
-  color: white;
+  background: var(--tooltip-bg);
+  color: var(--tooltip-text);
   font-family: var(--font-family);
   font-size: var(--font-size-xs);
   padding: var(--space-xs) var(--space-sm);
@@ -23,5 +23,5 @@
 }
 
 .arrow {
-  fill: rgba(30, 30, 30, 0.92);
+  fill: var(--tooltip-bg);
 }

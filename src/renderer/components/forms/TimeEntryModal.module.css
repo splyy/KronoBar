@@ -2,7 +2,7 @@
 .overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.55);
+  background: var(--overlay-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   display: flex;
@@ -23,7 +23,7 @@
   background: var(--bg-primary);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-color);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--modal-shadow);
   overflow: hidden;
   animation: slideUp 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -167,7 +167,7 @@
   border: none;
   border-radius: var(--radius-sm);
   background: var(--accent-color);
-  color: #000;
+  color: var(--btn-primary-text);
   font-size: var(--font-size-base);
   font-weight: 600;
   font-family: var(--font-family);

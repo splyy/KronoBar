@@ -157,7 +157,12 @@ export function Settings() {
           </div>
           <button
             className={`${styles.toggle} ${settings.launch_at_login ? styles.toggleOn : ''}`}
-            onClick={() => updateSetting('launch_at_login', !settings.launch_at_login)}
+            onClick={async () => {
+              const error = await updateSetting('launch_at_login', !settings.launch_at_login);
+              if (error) {
+                showToast(error, 'error');
+              }
+            }}
           >
             <div className={styles.toggleKnob} />
           </button>

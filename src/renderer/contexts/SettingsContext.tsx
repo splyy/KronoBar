@@ -12,7 +12,7 @@ const defaultSettings: Settings = {
 interface SettingsContextValue {
   settings: Settings;
   loading: boolean;
-  updateSetting: <K extends keyof Settings>(key: K, value: Settings[K]) => Promise<void>;
+  updateSetting: <K extends keyof Settings>(key: K, value: Settings[K]) => Promise<string | null>;
 }
 
 const SettingsContext = createContext<SettingsContextValue | null>(null);
@@ -32,9 +32,14 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     refresh();
   }, [refresh]);
 
-  const updateSetting = async <K extends keyof Settings>(key: K, value: Settings[K]) => {
-    await window.kronobar.settings.set(key, value);
+  const updateSetting = async <K extends keyof Settings>(key: K, value: Settings[K]): Promise<string | null> => {
+    const result = await window.kronobar.settings.set(key, value);
+    if (!result.success) {
+      // Setting was rejected (e.g. login item failed) — don't update local state
+      return result.error ?? 'Erreur inconnue';
+    }
     setSettings((prev) => ({ ...prev, [key]: value }));
+    return null;
   };
 
   return (

@@ -4,6 +4,7 @@ import { MakerZIP } from '@electron-forge/maker-zip';
 import { VitePlugin } from '@electron-forge/plugin-vite';
 import { FusesPlugin } from '@electron-forge/plugin-fuses';
 import { FuseV1Options, FuseVersion } from '@electron/fuses';
+import { execSync } from 'child_process';
 import path from 'path';
 import fs from 'fs';
 
@@ -47,6 +48,16 @@ const config: ForgeConfig = {
         }
       },
     ],
+  },
+  hooks: {
+    postPackage: async (_config, options) => {
+      if (options.platform !== 'darwin') return;
+      // Ad-hoc sign the app so macOS allows it to run and login items work
+      const appPath = path.join(options.outputPaths[0], 'KronoBar.app');
+      console.log(`[KronoBar] Ad-hoc signing ${appPath}...`);
+      execSync(`codesign --deep --force --sign - "${appPath}"`, { stdio: 'inherit' });
+      console.log('[KronoBar] Signing complete.');
+    },
   },
   rebuildConfig: {},
   makers: [

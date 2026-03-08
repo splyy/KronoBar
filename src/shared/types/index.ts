@@ -65,6 +65,12 @@ export interface Settings {
   launch_at_login: boolean;
 }
 
+// --- Setting result ---
+export interface SetSettingResult {
+  success: boolean;
+  error?: string;
+}
+
 // --- Stats ---
 export interface StatEntry {
   client_id: number;
@@ -104,7 +110,7 @@ export interface KronoBarAPI {
   };
   settings: {
     get<T>(key: string): Promise<T | undefined>;
-    set<T>(key: string, value: T): Promise<void>;
+    set<T>(key: string, value: T): Promise<SetSettingResult>;
     getAll(): Promise<Settings>;
   };
   shell: {

@@ -133,7 +133,7 @@
 }
 
 .entryRow:hover {
-  background: rgba(255, 255, 255, 0.015);
+  background: var(--bg-hover-row);
   margin: 0 -16px;
   padding-left: 16px;
   padding-right: 16px;
@@ -238,7 +238,7 @@
 
 @keyframes flashGreen {
   0% {
-    background: rgba(48, 209, 88, 0.20);
+    background: var(--success-soft);
   }
   100% {
     background: transparent;
@@ -255,19 +255,19 @@
   border-radius: 50%;
   border: none;
   background: var(--accent-color);
-  color: #000;
+  color: var(--fab-text);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(255, 159, 10, 0.3), 0 1px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--fab-shadow);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   z-index: 10;
 }
 
 .fab:hover {
   transform: scale(1.08);
-  box-shadow: 0 6px 20px rgba(255, 159, 10, 0.4), 0 2px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--fab-shadow-hover);
 }
 
 .fab:active {

@@ -2,6 +2,7 @@ import { app, globalShortcut } from 'electron';
 import { TrayManager } from './main/tray';
 import { registerIpcHandlers } from './main/ipc/handlers';
 import { initDatabase, closeDatabase } from './main/database/connection';
+import { syncLoginItemSetting } from './main/services/settings';
 
 // Hide dock icon (macOS only — menu bar app)
 if (process.platform === 'darwin') {
@@ -23,6 +24,8 @@ app.whenReady().then(async () => {
     console.log('[KronoBar] Database initialized');
     registerIpcHandlers();
     console.log('[KronoBar] IPC handlers registered');
+    syncLoginItemSetting();
+    console.log('[KronoBar] Login item synced');
     trayManager = TrayManager.getInstance();
     console.log('[KronoBar] Tray created');
     globalShortcut.register('CommandOrControl+Shift+T', () => {

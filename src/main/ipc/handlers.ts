@@ -115,7 +115,7 @@ export function registerIpcHandlers(): void {
   });
 
   ipcMain.handle(IPC.SETTINGS_SET, (_event, key: string, value: unknown) => {
-    settingsService.setSetting(key, value);
+    return settingsService.setSetting(key, value);
   });
 
   ipcMain.handle(IPC.SETTINGS_GET_ALL, () => {

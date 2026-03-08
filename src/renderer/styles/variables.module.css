@@ -58,9 +58,86 @@
   --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.40);
   --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.50);
 
+  /* Misc */
+  --bg-hover-row: rgba(255, 255, 255, 0.015);
+  --bg-hover-tab: rgba(255, 255, 255, 0.03);
+  --accent-border: rgba(255, 159, 10, 0.15);
+  --fab-shadow: 0 4px 16px rgba(255, 159, 10, 0.3), 0 1px 4px rgba(0, 0, 0, 0.3);
+  --fab-shadow-hover: 0 6px 20px rgba(255, 159, 10, 0.4), 0 2px 6px rgba(0, 0, 0, 0.3);
+  --fab-text: #000;
+  --overlay-bg: rgba(0, 0, 0, 0.55);
+  --overlay-light-bg: rgba(0, 0, 0, 0.3);
+  --modal-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+  --tooltip-bg: rgba(30, 30, 30, 0.92);
+  --tooltip-text: white;
+  --toggle-knob: #fff;
+  --toggle-knob-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  --btn-primary-text: #000;
+
   /* Card (kept for compat with some components) */
   --bg-card: var(--bg-secondary);
   --card-border: 1px solid var(--border-subtle);
   --card-shadow: none;
   --card-gap: 8px;
+}
+
+/* ── Light mode ─────────────────────── */
+@media (prefers-color-scheme: light) {
+  :root {
+    /* Backgrounds */
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F2F2F7;
+    --bg-tertiary: #E5E5EA;
+    --bg-hover: #D1D1D6;
+    --bg-surface: #F9F9FB;
+
+    /* Text */
+    --text-primary: #1C1C1E;
+    --text-secondary: #6C6C70;
+    --text-tertiary: #AEAEB2;
+
+    /* Borders */
+    --border-color: #D1D1D6;
+    --border-subtle: #E5E5EA;
+
+    /* Accents — slightly darker for contrast on light bg */
+    --accent-color: #E08600;
+    --accent-soft: rgba(255, 159, 10, 0.12);
+    --accent-hover: #CC7A00;
+    --success-color: #28A745;
+    --success-soft: rgba(40, 167, 69, 0.10);
+    --danger-color: #E0362C;
+    --danger-soft: rgba(224, 54, 44, 0.10);
+    --blue-color: #007AFF;
+    --blue-soft: rgba(0, 122, 255, 0.10);
+    --purple-color: #AF52DE;
+    --purple-soft: rgba(175, 82, 222, 0.10);
+
+    /* Shadows — lighter for light mode */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.10);
+    --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
+
+    /* Misc */
+    --bg-hover-row: rgba(0, 0, 0, 0.03);
+    --bg-hover-tab: rgba(0, 0, 0, 0.04);
+    --accent-border: rgba(224, 134, 0, 0.20);
+    --fab-shadow: 0 4px 16px rgba(224, 134, 0, 0.25), 0 1px 4px rgba(0, 0, 0, 0.10);
+    --fab-shadow-hover: 0 6px 20px rgba(224, 134, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.10);
+    --fab-text: #000;
+    --overlay-bg: rgba(0, 0, 0, 0.30);
+    --overlay-light-bg: rgba(0, 0, 0, 0.15);
+    --modal-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+    --tooltip-bg: rgba(50, 50, 50, 0.95);
+    --tooltip-text: white;
+    --toggle-knob: #fff;
+    --toggle-knob-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    --btn-primary-text: #000;
+
+    /* Card */
+    --bg-card: var(--bg-secondary);
+    --card-border: 1px solid var(--border-subtle);
+    --card-shadow: none;
+    --card-gap: 8px;
+  }
 }
