@@ -41,46 +41,44 @@ https://github.com/user-attachments/assets/13161de8-df31-4d25-b885-219cbc227b1a
 
 ## Installation
 
-### macOS
+Download the latest version from the [Releases](https://github.com/splyy/KronoBar/releases) page:
 
-Clone the repository and run the install script:
+| Platform | File | Notes |
+|----------|------|-------|
+| macOS (Apple Silicon) | `KronoBar-darwin-arm64-x.x.x.zip` | Extract and move to `/Applications` |
+| Windows | `KronoBar-x.x.x.Setup.exe` | Run the installer |
+| Windows | `KronoBar-win32-x64-x.x.x.zip` | Portable version, no install needed |
 
-```bash
-git clone https://github.com/splyy/KronoBar.git
-cd KronoBar
-chmod +x install-macos.sh
-./install-macos.sh
-```
+### macOS — Bypassing Gatekeeper
 
-The script will install dependencies, build the app, and copy it to `/Applications`.
-
-#### Bypassing macOS Gatekeeper
-
-Since KronoBar is not signed with an Apple Developer certificate, macOS may block the app on first launch. The install script handles this automatically. If you installed manually:
+Since KronoBar is not signed with an Apple Developer certificate, macOS may block the app on first launch. To fix this:
 
 ```bash
 xattr -cr /Applications/KronoBar.app
 ```
 
-### Windows
+## Development
 
-Clone the repository and run the install script (requires [Git Bash](https://git-scm.com/) or similar):
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (v20+)
+- [Git](https://git-scm.com/)
+
+### Getting started
 
 ```bash
 git clone https://github.com/splyy/KronoBar.git
 cd KronoBar
-./install-windows.sh
+npm install
+npm start
 ```
 
-The script will install dependencies, build the app, and launch the Squirrel installer which creates shortcuts in the Start Menu and on the Desktop.
-
-Alternatively, download the latest `Setup.exe` from the [Releases](https://github.com/splyy/KronoBar/releases) page.
-
-## Development
+### Commands
 
 ```bash
 npm start          # Dev mode with hot reload (uses a separate local database)
 npm run dev:demo   # Reset dev database with sample data and start the app
+npm run make       # Build distributable for your current platform
 npm run lint       # Lint code
 ```
 
@@ -92,10 +90,25 @@ The dev environment uses its own database (`.dev-data/kronobar.db`) so your prod
 
 ### Publishing a release
 
-1. Update the version in `package.json`
-2. Create a `.env` file at the project root with your GitHub token: `GITHUB_TOKEN=ghp_...`
-3. Run `npm run publish` — this builds and uploads the release as a draft on GitHub
-4. Go to [Releases](https://github.com/splyy/KronoBar/releases) and publish the draft
+Releases are built automatically by CI when a tag is pushed:
+
+```bash
+# 1. Update the version in package.json
+# 2. Commit, tag, and push
+git tag v1.1.0
+git push --tags
+```
+
+The GitHub Actions workflow builds for macOS and Windows, then creates a release with all artifacts.
+
+<details>
+<summary>Manual publish (local)</summary>
+
+1. Create a `.env` file at the project root with your GitHub token: `GITHUB_TOKEN=ghp_...`
+2. Run `npm run publish` — this builds and uploads the release as a draft on GitHub
+3. Go to [Releases](https://github.com/splyy/KronoBar/releases) and publish the draft
+
+</details>
 
 ## Tech Stack
 
