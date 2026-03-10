@@ -1,7 +1,7 @@
 {
   "name": "kronobar",
   "productName": "KronoBar",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A macOS & Windows menu bar app for freelancers to track time on projects and clients",
   "main": ".vite/build/main.js",
   "private": true,
