@@ -166,6 +166,20 @@ h1 {
   letter-spacing:-.03em;
 }
 h1 .K { color:var(--accent); }
+h1 .K-logo {
+  display:inline-block;
+  height:.52em;
+  width:.52em;
+  object-fit:contain;
+  vertical-align:baseline;
+  margin:0 -.02em;
+  border-radius:50%;
+  animation: vortex 8s linear infinite;
+}
+h1 .K-logo:hover {
+  animation-duration: 1s;
+}
+@keyframes vortex { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
 h1 .sub {
   display:block;
   font-size:.38em; font-weight:300;
