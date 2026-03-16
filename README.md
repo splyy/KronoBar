@@ -49,13 +49,23 @@ Download the latest version from the [Releases](https://github.com/splyy/KronoBa
 | Windows | `KronoBar-x.x.x.Setup.exe` | Run the installer |
 | Windows | `KronoBar-win32-x64-x.x.x.zip` | Portable version, no install needed |
 
-### macOS — Bypassing Gatekeeper
+### macOS
 
-Since KronoBar is not signed with an Apple Developer certificate, macOS may block the app on first launch. To fix this:
+1. Download and extract the `.zip`
+2. Move `KronoBar.app` to `/Applications`
+3. **Bypass Gatekeeper** — Since KronoBar is not signed with an Apple Developer certificate, macOS will block the first launch. Open Terminal and run:
 
 ```bash
 xattr -cr /Applications/KronoBar.app
 ```
+
+4. Launch KronoBar — it will appear in your menu bar
+
+### Windows
+
+1. Download and run the `Setup.exe`
+2. Windows SmartScreen may show a warning — click **"More info"** then **"Run anyway"**
+3. KronoBar installs and launches automatically — the icon appears in the system tray
 
 ## Development
 

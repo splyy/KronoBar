@@ -101,6 +101,32 @@
   }, { threshold: 0.08 });
   document.querySelectorAll('.feat-card, .gal-item').forEach(c => observer.observe(c));
 
+  // ─ Install modals ─
+  document.querySelectorAll('.dl-help-btn[data-install]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      const modal = document.getElementById('install-' + btn.dataset.install);
+      if (modal) { modal.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    });
+  });
+
+  document.querySelectorAll('.install-modal').forEach(modal => {
+    modal.querySelector('.install-modal-close').addEventListener('click', () => {
+      modal.classList.remove('open'); document.body.style.overflow = '';
+    });
+    modal.addEventListener('click', e => {
+      if (e.target === modal) { modal.classList.remove('open'); document.body.style.overflow = ''; }
+    });
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.install-modal.open').forEach(m => {
+        m.classList.remove('open'); document.body.style.overflow = '';
+      });
+    }
+  });
+
   // ─ Fetch latest GitHub release ─
   const REPO = 'splyy/KronoBar';
   const API = `https://api.github.com/repos/${REPO}/releases/latest`;

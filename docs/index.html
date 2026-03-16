@@ -345,6 +345,7 @@
                 <div class="dl-link-txt"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Télécharger .zip</div>
                 <div class="dl-hint">Extraire le .zip et glisser KronoBar.app dans /Applications</div>
             </a>
+            <button class="dl-help-btn" data-install="mac">Comment installer sur macOS ?</button>
             <a id="dl-win" href="https://github.com/splyy/KronoBar/releases/latest" class="dl-card">
                 <div class="dl-card-top">
                     <span class="dl-os-name"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg> Windows</span>
@@ -358,8 +359,89 @@
                 <div class="dl-link-txt"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Télécharger Setup.exe</div>
                 <div class="dl-hint">Lancer l'installateur — raccourci créé sur le Bureau et le Menu Démarrer</div>
             </a>
+            <button class="dl-help-btn" data-install="win">Comment installer sur Windows ?</button>
         </div>
     </section>
+
+    <!-- Install modals -->
+    <div id="install-mac" class="install-modal">
+        <div class="install-modal-box">
+            <div class="install-modal-header">
+                <span class="install-modal-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg> Installer sur macOS</span>
+                <button class="install-modal-close" aria-label="Fermer">✕</button>
+            </div>
+            <div class="install-modal-body">
+                <div class="install-step">
+                    <span class="install-step-n">1</span>
+                    <div class="install-step-txt">
+                        <span class="install-step-title">Télécharger</span>
+                        <span class="install-step-desc">Télécharge le fichier <code>.zip</code> depuis le bouton ci-dessus.</span>
+                    </div>
+                </div>
+                <div class="install-step">
+                    <span class="install-step-n">2</span>
+                    <div class="install-step-txt">
+                        <span class="install-step-title">Extraire</span>
+                        <span class="install-step-desc">Double-clique sur le <code>.zip</code> pour extraire <code>KronoBar.app</code>.</span>
+                    </div>
+                </div>
+                <div class="install-step">
+                    <span class="install-step-n">3</span>
+                    <div class="install-step-txt">
+                        <span class="install-step-title">Déplacer dans Applications</span>
+                        <span class="install-step-desc">Glisse <code>KronoBar.app</code> dans ton dossier <code>/Applications</code>.</span>
+                    </div>
+                </div>
+                <div class="install-step">
+                    <span class="install-step-n">4</span>
+                    <div class="install-step-txt">
+                        <span class="install-step-title">Débloquer Gatekeeper</span>
+                        <span class="install-step-desc">macOS va afficher un avertissement car l'app n'est pas signée avec un certificat Apple. Ouvre le Terminal et lance :</span>
+                    </div>
+                </div>
+                <div class="install-code">xattr -cr /Applications/KronoBar.app</div>
+                <div class="install-step">
+                    <span class="install-step-n">5</span>
+                    <div class="install-step-txt">
+                        <span class="install-step-title">Lancer</span>
+                        <span class="install-step-desc">Ouvre <code>KronoBar</code> — il apparaîtra dans ta barre de menus. C'est tout.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="install-win" class="install-modal">
+        <div class="install-modal-box">
+            <div class="install-modal-header">
+                <span class="install-modal-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg> Installer sur Windows</span>
+                <button class="install-modal-close" aria-label="Fermer">✕</button>
+            </div>
+            <div class="install-modal-body">
+                <div class="install-step">
+                    <span class="install-step-n">1</span>
+                    <div class="install-step-txt">
+                        <span class="install-step-title">Télécharger</span>
+                        <span class="install-step-desc">Télécharge le fichier <code>Setup.exe</code> depuis le bouton ci-dessus.</span>
+                    </div>
+                </div>
+                <div class="install-step">
+                    <span class="install-step-n">2</span>
+                    <div class="install-step-txt">
+                        <span class="install-step-title">Lancer l'installateur</span>
+                        <span class="install-step-desc">Double-clique sur le <code>.exe</code>. Windows SmartScreen peut afficher un avertissement — clique sur <strong>"Informations complémentaires"</strong> puis <strong>"Exécuter quand même"</strong>.</span>
+                    </div>
+                </div>
+                <div class="install-step">
+                    <span class="install-step-n">3</span>
+                    <div class="install-step-txt">
+                        <span class="install-step-title">C'est prêt</span>
+                        <span class="install-step-desc">KronoBar s'installe et se lance automatiquement. Un raccourci est créé sur le Bureau et dans le Menu Démarrer. L'icône apparaît dans la zone de notification (system tray).</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <footer class="footer">
         <div class="footer-brand">

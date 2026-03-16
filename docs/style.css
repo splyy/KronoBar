@@ -631,6 +631,77 @@ h1 .sub {
 }
 .lb-close:hover { border-color:var(--accent); }
 
+/* Install help button */
+.dl-help-btn {
+  background:none; border:1px solid var(--border2);
+  color:var(--text2); font-family:'IBM Plex Mono',monospace;
+  font-size:10px; letter-spacing:.1em; text-transform:uppercase;
+  padding:10px 16px; cursor:pointer; width:100%;
+  transition:all .2s; text-align:left;
+}
+.dl-help-btn:hover { color:var(--accent); border-color:var(--accent); }
+
+/* Install modal */
+.install-modal {
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,.85); z-index:1100;
+  align-items:center; justify-content:center;
+  backdrop-filter:blur(8px);
+}
+.install-modal.open { display:flex; }
+.install-modal-box {
+  background:var(--bg1); border:1px solid var(--border2);
+  max-width:520px; width:90%;
+  max-height:85vh; overflow-y:auto;
+}
+.install-modal-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:20px 24px; border-bottom:1px solid var(--border);
+}
+.install-modal-title {
+  font-size:14px; font-weight:600; display:flex; align-items:center; gap:10px;
+  color:var(--text);
+}
+.install-modal-title svg { color:var(--accent); }
+.install-modal-close {
+  background:none; border:1px solid var(--border2);
+  color:var(--text2); width:32px; height:32px;
+  font-size:14px; cursor:pointer; transition:all .2s;
+  display:flex; align-items:center; justify-content:center;
+}
+.install-modal-close:hover { border-color:var(--accent); color:var(--accent); }
+.install-modal-body { padding:24px; display:flex; flex-direction:column; gap:0; }
+.install-step {
+  display:flex; align-items:flex-start; gap:16px;
+  padding:16px 0; border-bottom:1px solid var(--border);
+}
+.install-step:last-child { border-bottom:none; }
+.install-step-n {
+  width:28px; height:28px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--accent); color:#000;
+  font-size:12px; font-weight:700;
+}
+.install-step-txt { display:flex; flex-direction:column; gap:4px; }
+.install-step-title { font-size:12px; font-weight:600; color:var(--text); }
+.install-step-desc {
+  font-family:'IBM Plex Sans',sans-serif;
+  font-size:12px; color:var(--text2); line-height:1.6;
+}
+.install-step-desc code {
+  background:var(--bg3); border:1px solid var(--border2);
+  padding:1px 6px; font-family:'IBM Plex Mono',monospace; font-size:11px;
+  color:var(--accent);
+}
+.install-step-desc strong { color:var(--text); font-weight:600; }
+.install-code {
+  background:var(--bg3); border:1px solid var(--border2);
+  padding:12px 16px; font-family:'IBM Plex Mono',monospace;
+  font-size:12px; color:var(--accent);
+  margin:0 0 8px 44px;
+  user-select:all;
+}
+
 /* Footer */
 .footer {
   padding:28px 52px;
