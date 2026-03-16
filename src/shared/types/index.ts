@@ -82,6 +82,15 @@ export interface StatEntry {
   total_minutes: number;
 }
 
+// --- Update ---
+export interface UpdateCheckResult {
+  status: 'up-to-date' | 'update-available' | 'error';
+  currentVersion: string;
+  latestVersion?: string;
+  downloadUrl?: string;
+  error?: string;
+}
+
 // --- IPC API ---
 export interface KronoBarAPI {
   clients: {
@@ -115,6 +124,10 @@ export interface KronoBarAPI {
   };
   shell: {
     openExternal(url: string): Promise<void>;
+  };
+  app: {
+    getVersion(): Promise<string>;
+    checkForUpdate(): Promise<UpdateCheckResult>;
   };
   platform: NodeJS.Platform;
 }

@@ -33,7 +33,7 @@ https://github.com/user-attachments/assets/13161de8-df31-4d25-b885-219cbc227b1a
 - **CSV export** — Export your tracking data for invoicing
 - **Global shortcut** — Toggle the window with `Cmd + Shift + K` (macOS) or `Ctrl + Shift + K` (Windows)
 - **Launch at login** — Start automatically with your OS
-- **Auto-update** — The app checks for updates automatically (Windows)
+- **Update check** — Automatic background check + manual "Check for updates" button in Settings, with a badge on the Settings tab when a new version is available
 - **Local data** — Everything stays on your machine (SQLite)
 - **Dark & light mode** — Adapts to your system theme, with native vibrancy (macOS) and acrylic (Windows) effects
 

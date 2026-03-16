@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSettings } from '../../hooks/useSettings';
 import { useClients } from '../../hooks/useClients';
 import { useProjects } from '../../hooks/useProjects';
@@ -12,7 +12,7 @@ import {
 } from '../common/Icons';
 import { Select } from '../common/Select';
 import { Tooltip } from '../common/Tooltip';
-import type { Client, ClientInput, Project, ProjectInput } from '@/shared/types';
+import type { Client, ClientInput, Project, ProjectInput, UpdateCheckResult } from '@/shared/types';
 import styles from './Settings.module.css';
 
 const COLORS = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316'];
@@ -21,12 +21,34 @@ type SubView = 'main' | 'clients' | 'projects';
 
 const isMac = window.kronobar.platform === 'darwin';
 
-export function Settings() {
+interface SettingsProps {
+  updateResult: UpdateCheckResult | null;
+  onCheckUpdate: () => Promise<UpdateCheckResult | null>;
+}
+
+export function Settings({ updateResult, onCheckUpdate }: SettingsProps) {
   const [subView, setSubView] = useState<SubView>('main');
   const { settings, updateSetting } = useSettings();
   const { clients, create: createClient, update: updateClient, archive: archiveClient, unarchive: unarchiveClient, refresh: refreshClients } = useClients(true);
   const { projects, create: createProject, update: updateProject, archive: archiveProject, unarchive: unarchiveProject } = useProjects(undefined, true);
   const { showToast } = useToast();
+  const [appVersion, setAppVersion] = useState('');
+  const [checking, setChecking] = useState(false);
+
+  useEffect(() => {
+    window.kronobar.app.getVersion().then(setAppVersion);
+  }, []);
+
+  const handleCheckUpdate = async () => {
+    setChecking(true);
+    const result = await onCheckUpdate();
+    setChecking(false);
+    if (result?.status === 'error') {
+      showToast('Impossible de vérifier les mises à jour', 'error');
+    }
+  };
+
+  const updateStatus = checking ? 'checking' : (updateResult?.status ?? 'idle');
 
   if (subView === 'clients') {
     return (
@@ -194,6 +216,35 @@ export function Settings() {
         {/* À PROPOS */}
         <div className={styles.sectionLabel}>À propos</div>
 
+        <div className={styles.settingRow}>
+          <div>
+            <div className={styles.settingLabel}>Mises à jour</div>
+            <div className={styles.settingDesc}>
+              {updateStatus === 'checking' && 'Vérification en cours…'}
+              {updateStatus === 'up-to-date' && 'Vous êtes à jour'}
+              {updateStatus === 'update-available' && `v${updateResult?.latestVersion} disponible`}
+              {updateStatus === 'error' && 'Erreur de vérification'}
+              {updateStatus === 'idle' && 'Vérifier les nouvelles versions'}
+            </div>
+          </div>
+          {updateStatus === 'update-available' ? (
+            <button
+              className={styles.btnUpdate}
+              onClick={() => window.kronobar.shell.openExternal(updateResult?.downloadUrl ?? '')}
+            >
+              Télécharger
+            </button>
+          ) : (
+            <button
+              className={styles.btnExport}
+              onClick={handleCheckUpdate}
+              disabled={updateStatus === 'checking'}
+            >
+              {updateStatus === 'checking' ? 'Vérification…' : 'Vérifier'}
+            </button>
+          )}
+        </div>
+
         <button
           className={styles.settingLink}
           style={{ borderBottom: `1px solid var(--border-subtle)` }}
@@ -226,7 +277,7 @@ export function Settings() {
 
       <div className={styles.appFooter}>
         <div className={styles.appFooterName}>KronoBar</div>
-        <div className={styles.appFooterVersion}>v1.0.0 — MIT License</div>
+        <div className={styles.appFooterVersion}>v{appVersion || '…'} — MIT License</div>
       </div>
     </div>
   );

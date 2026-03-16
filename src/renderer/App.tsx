@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { ComponentType } from 'react';
 import * as RadixTooltip from '@radix-ui/react-tooltip';
 import '../renderer/styles/global.css';
@@ -10,6 +10,7 @@ import { History } from './components/tabs/History';
 import { Stats } from './components/tabs/Stats';
 import { Settings } from './components/tabs/Settings';
 import { IconTabToday, IconTabHistory, IconTabStats, IconTabSettings } from './components/common/Icons';
+import type { UpdateCheckResult } from '@/shared/types';
 
 type Tab = 'today' | 'history' | 'stats' | 'settings';
 
@@ -22,6 +23,23 @@ const tabs: { id: Tab; label: string; Icon: ComponentType<{ size?: number }> }[]
 
 export function App() {
   const [activeTab, setActiveTab] = useState<Tab>('today');
+  const [updateResult, setUpdateResult] = useState<UpdateCheckResult | null>(null);
+
+  useEffect(() => {
+    window.kronobar.app.checkForUpdate().then(setUpdateResult).catch(() => {});
+  }, []);
+
+  const recheckUpdate = useCallback(async () => {
+    try {
+      const result = await window.kronobar.app.checkForUpdate();
+      setUpdateResult(result);
+      return result;
+    } catch {
+      return null;
+    }
+  }, []);
+
+  const hasUpdate = updateResult?.status === 'update-available';
 
   const renderTab = () => {
     switch (activeTab) {
@@ -32,7 +50,7 @@ export function App() {
       case 'stats':
         return <Stats />;
       case 'settings':
-        return <Settings />;
+        return <Settings updateResult={updateResult} onCheckUpdate={recheckUpdate} />;
     }
   };
 
@@ -49,7 +67,10 @@ export function App() {
                   className={`${styles.tabBtn} ${activeTab === tab.id ? styles.tabBtnActive : ''}`}
                   onClick={() => setActiveTab(tab.id)}
                 >
-                  <tab.Icon size={20} />
+                  <div className={styles.tabIconWrap}>
+                    <tab.Icon size={20} />
+                    {tab.id === 'settings' && hasUpdate && <span className={styles.tabBadge} />}
+                  </div>
                   <span>{tab.label}</span>
                 </button>
               ))}

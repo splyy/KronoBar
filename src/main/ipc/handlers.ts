@@ -1,7 +1,8 @@
-import { ipcMain, shell, dialog } from 'electron';
+import { ipcMain, shell, dialog, app } from 'electron';
 import fs from 'fs';
 // eslint-disable-next-line import/no-unresolved
 import { IPC } from '@/shared/constants/ipc-channels';
+import type { UpdateCheckResult } from '@/shared/types';
 import * as clientsService from '../services/clients';
 import * as projectsService from '../services/projects';
 import * as trackingService from '../services/tracking';
@@ -129,4 +130,42 @@ export function registerIpcHandlers(): void {
     }
     return shell.openExternal(url);
   });
+
+  // --- App ---
+  ipcMain.handle(IPC.APP_VERSION, () => {
+    return app.getVersion();
+  });
+
+  ipcMain.handle(IPC.APP_CHECK_UPDATE, async (): Promise<UpdateCheckResult> => {
+    const currentVersion = app.getVersion();
+    try {
+      const response = await fetch(
+        'https://api.github.com/repos/splyy/KronoBar/releases/latest',
+        { headers: { 'Accept': 'application/vnd.github.v3+json', 'User-Agent': 'KronoBar' } }
+      );
+      if (!response.ok) {
+        return { status: 'error', currentVersion, error: `GitHub API error: ${response.status}` };
+      }
+      const data = await response.json() as { tag_name: string; html_url: string };
+      const latestVersion = data.tag_name.replace(/^v/, '');
+      if (compareVersions(latestVersion, currentVersion) > 0) {
+        return { status: 'update-available', currentVersion, latestVersion, downloadUrl: data.html_url };
+      }
+      return { status: 'up-to-date', currentVersion, latestVersion };
+    } catch (err) {
+      return { status: 'error', currentVersion, error: (err as Error).message };
+    }
+  });
+}
+
+function compareVersions(a: string, b: string): number {
+  const pa = a.split('.').map(Number);
+  const pb = b.split('.').map(Number);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const na = pa[i] ?? 0;
+    const nb = pb[i] ?? 0;
+    if (na > nb) return 1;
+    if (na < nb) return -1;
+  }
+  return 0;
 }

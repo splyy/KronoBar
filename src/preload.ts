@@ -35,6 +35,10 @@ const api: KronoBarAPI = {
   shell: {
     openExternal: (url) => ipcRenderer.invoke(IPC.OPEN_EXTERNAL, url),
   },
+  app: {
+    getVersion: () => ipcRenderer.invoke(IPC.APP_VERSION),
+    checkForUpdate: () => ipcRenderer.invoke(IPC.APP_CHECK_UPDATE),
+  },
   platform: process.platform,
 };
 

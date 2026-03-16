@@ -30,4 +30,8 @@ export const IPC = {
 
   // Shell
   OPEN_EXTERNAL: 'shell:openExternal',
+
+  // App
+  APP_VERSION: 'app:version',
+  APP_CHECK_UPDATE: 'app:checkUpdate',
 } as const;
