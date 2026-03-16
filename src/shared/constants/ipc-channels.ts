@@ -22,6 +22,7 @@ export const IPC = {
   TRACKING_TODAY_TOTAL: 'tracking:todayTotal',
   TRACKING_STATS: 'tracking:stats',
   TRACKING_EXPORT: 'tracking:export',
+  EXPORT_ALL: 'export:all',
 
   // Settings
   SETTINGS_GET: 'settings:get',

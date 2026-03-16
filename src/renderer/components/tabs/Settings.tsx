@@ -4,7 +4,6 @@ import { useClients } from '../../hooks/useClients';
 import { useProjects } from '../../hooks/useProjects';
 import { useToast } from '../../hooks/useToast';
 import { getCurrencySymbol } from '../../../shared/utils/currency';
-import { getLocalDate } from '../../../shared/utils/date';
 import {
   IconPencil, IconArchive, IconUnarchive, IconPlus,
   IconUsers, IconFolder, IconAlertCircle, IconStar,
@@ -81,15 +80,11 @@ export function Settings({ updateResult, onCheckUpdate }: SettingsProps) {
     );
   }
 
-  const handleExport = async () => {
+  const handleExportAll = async () => {
     try {
-      const today = getLocalDate();
-      const d = new Date();
-      d.setDate(1);
-      const monthStart = d.toLocaleDateString('en-CA');
-      const result = await window.kronobar.tracking.export(monthStart, today);
+      const result = await window.kronobar.tracking.exportAll();
       if (result.success) {
-        showToast('Export CSV réussi');
+        showToast(`${result.count} fichiers CSV exportés`);
       }
     } catch {
       showToast("Erreur lors de l'export", 'error');
@@ -205,10 +200,10 @@ export function Settings({ updateResult, onCheckUpdate }: SettingsProps) {
 
         <div className={styles.settingRow}>
           <div>
-            <div className={styles.settingLabel}>Exporter (CSV)</div>
-            <div className={styles.settingDesc}>Sauvegarder toutes les entrées</div>
+            <div className={styles.settingLabel}>Exporter tout (CSV)</div>
+            <div className={styles.settingDesc}>Clients, projets, tracking, réglages</div>
           </div>
-          <button className={styles.btnExport} onClick={handleExport}>
+          <button className={styles.btnExport} onClick={handleExportAll}>
             Exporter
           </button>
         </div>

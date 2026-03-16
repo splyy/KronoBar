@@ -26,6 +26,7 @@ const api: KronoBarAPI = {
     getTodayTotal: (date) => ipcRenderer.invoke(IPC.TRACKING_TODAY_TOTAL, date),
     getStats: (start, end) => ipcRenderer.invoke(IPC.TRACKING_STATS, start, end),
     export: (start, end) => ipcRenderer.invoke(IPC.TRACKING_EXPORT, start, end),
+    exportAll: () => ipcRenderer.invoke(IPC.EXPORT_ALL),
   },
   settings: {
     get: (key) => ipcRenderer.invoke(IPC.SETTINGS_GET, key),

@@ -39,14 +39,8 @@ app.whenReady().then(async () => {
     });
     console.log('[KronoBar] Global shortcut registered');
 
-    // Auto-update (only in packaged app)
-    if (app.isPackaged) {
-      const { updateElectronApp } = await import('update-electron-app');
-      updateElectronApp({
-        updateInterval: '1 hour',
-      });
-      console.log('[KronoBar] Auto-updater initialized');
-    }
+    // Update check is handled via IPC (manual check in Settings + badge)
+    // No forced auto-download — the user decides when to update
   } catch (err) {
     console.error('[KronoBar] Fatal startup error:', err);
   }

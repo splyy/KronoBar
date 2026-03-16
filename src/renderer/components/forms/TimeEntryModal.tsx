@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useClients } from '../../hooks/useClients';
 import { useProjects } from '../../hooks/useProjects';
 import { IconXClose } from '../common/Icons';
@@ -23,13 +23,15 @@ export function TimeEntryModal({ date, entry, onSave, onClose }: TimeEntryModalP
   const [description, setDescription] = useState(entry?.description ?? '');
   const [entryDate, setEntryDate] = useState(entry?.date ?? date);
   const [saving, setSaving] = useState(false);
+  const prevClientId = useRef(selectedClientId);
 
+  // Only reset project when client actually changes (not on initial load)
   useEffect(() => {
-    if (selectedClientId && projectId) {
-      const still = projects.find((p) => p.id === projectId);
-      if (!still) setProjectId('');
+    if (prevClientId.current !== selectedClientId) {
+      prevClientId.current = selectedClientId;
+      setProjectId('');
     }
-  }, [selectedClientId, projects, projectId]);
+  }, [selectedClientId]);
 
   const totalMinutes = (parseInt(hours || '0') * 60) + parseInt(minutes || '0');
   const canSave = projectId !== '' && totalMinutes > 0;

@@ -120,6 +120,71 @@ export function exportTrackingData(
   return { headers, rows };
 }
 
+export function exportAllData(): {
+  clients: { headers: string[]; rows: string[][] };
+  projects: { headers: string[]; rows: string[][] };
+  tracking: { headers: string[]; rows: string[][] };
+  settings: { headers: string[]; rows: string[][] };
+} {
+  const db = getDatabase();
+
+  // Clients
+  const clients = queryAll<{ id: number; name: string; color: string; daily_rate: number | null; archived_at: string | null; created_at: string }>(
+    db, 'SELECT * FROM clients ORDER BY name'
+  );
+  const clientsData = {
+    headers: ['ID', 'Nom', 'Couleur', 'TJM', 'Archivé', 'Créé le'],
+    rows: clients.map(c => [
+      String(c.id), c.name, c.color,
+      c.daily_rate != null ? String(c.daily_rate) : '',
+      c.archived_at ? 'Oui' : 'Non',
+      c.created_at,
+    ]),
+  };
+
+  // Projects
+  const projects = queryAll<{ id: number; name: string; client_id: number; description: string | null; archived_at: string | null; created_at: string; client_name: string }>(
+    db, `SELECT p.*, c.name as client_name FROM projects p JOIN clients c ON p.client_id = c.id ORDER BY c.name, p.name`
+  );
+  const projectsData = {
+    headers: ['ID', 'Nom', 'Client', 'Description', 'Archivé', 'Créé le'],
+    rows: projects.map(p => [
+      String(p.id), p.name, p.client_name,
+      p.description ?? '',
+      p.archived_at ? 'Oui' : 'Non',
+      p.created_at,
+    ]),
+  };
+
+  // All tracking entries
+  const entries = queryAll<TrackingEntryWithDetails & { daily_rate: number | null }>(
+    db,
+    `SELECT te.*, p.name as project_name, p.client_id, c.name as client_name, c.color as client_color, c.daily_rate
+     FROM tracking te
+     JOIN projects p ON te.project_id = p.id
+     JOIN clients c ON p.client_id = c.id
+     ORDER BY te.date ASC, c.name ASC, p.name ASC`
+  );
+  const trackingData = {
+    headers: ['Date', 'Client', 'Projet', 'Durée (min)', 'Durée (h)', 'TJM', 'Description'],
+    rows: entries.map(e => [
+      e.date, e.client_name, e.project_name,
+      String(e.duration), (e.duration / 60).toFixed(2),
+      e.daily_rate != null ? String(e.daily_rate) : '',
+      e.description ?? '',
+    ]),
+  };
+
+  // Settings
+  const settingsRows = queryAll<{ key: string; value: string }>(db, 'SELECT key, value FROM settings ORDER BY key');
+  const settingsData = {
+    headers: ['Clé', 'Valeur'],
+    rows: settingsRows.map(s => [s.key, JSON.parse(s.value).toString()]),
+  };
+
+  return { clients: clientsData, projects: projectsData, tracking: trackingData, settings: settingsData };
+}
+
 export function getStatsByPeriod(
   startDate: string,
   endDate: string

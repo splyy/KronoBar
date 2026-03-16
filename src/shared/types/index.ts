@@ -116,6 +116,7 @@ export interface KronoBarAPI {
     getTodayTotal(date: string): Promise<number>;
     getStats(startDate: string, endDate: string): Promise<StatEntry[]>;
     export(startDate: string, endDate: string): Promise<{ success: boolean }>;
+    exportAll(): Promise<{ success: boolean; count?: number }>;
   };
   settings: {
     get<T>(key: string): Promise<T | undefined>;

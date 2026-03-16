@@ -54,7 +54,6 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
-    "sql.js": "^1.11.0",
-    "update-electron-app": "^3.1.2"
+    "sql.js": "^1.11.0"
   }
 }

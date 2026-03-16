@@ -123,6 +123,47 @@ export function registerIpcHandlers(): void {
     return settingsService.getAllSettings();
   });
 
+  // --- Full export ---
+  ipcMain.handle(IPC.EXPORT_ALL, async () => {
+    const data = trackingService.exportAllData();
+
+    const result = await dialog.showOpenDialog({
+      title: 'Choisir un dossier d\'export',
+      buttonLabel: 'Exporter ici',
+      properties: ['openDirectory', 'createDirectory'],
+    });
+
+    if (result.canceled || !result.filePaths[0]) {
+      return { success: false };
+    }
+
+    const dir = result.filePaths[0];
+    const timestamp = new Date().toISOString().slice(0, 10);
+
+    const escapeCsv = (val: string) => {
+      if (val.includes(',') || val.includes('"') || val.includes('\n')) {
+        return `"${val.replace(/"/g, '""')}"`;
+      }
+      return val;
+    };
+
+    const writeCsv = (filename: string, headers: string[], rows: string[][]) => {
+      const lines = [
+        headers.map(escapeCsv).join(','),
+        ...rows.map(row => row.map(escapeCsv).join(',')),
+      ];
+      const csv = '\uFEFF' + lines.join('\n');
+      fs.writeFileSync(`${dir}/${filename}`, csv, 'utf-8');
+    };
+
+    writeCsv(`kronobar-clients-${timestamp}.csv`, data.clients.headers, data.clients.rows);
+    writeCsv(`kronobar-projets-${timestamp}.csv`, data.projects.headers, data.projects.rows);
+    writeCsv(`kronobar-tracking-${timestamp}.csv`, data.tracking.headers, data.tracking.rows);
+    writeCsv(`kronobar-reglages-${timestamp}.csv`, data.settings.headers, data.settings.rows);
+
+    return { success: true, count: 4 };
+  });
+
   // --- Shell ---
   ipcMain.handle(IPC.OPEN_EXTERNAL, (_event, url: string) => {
     if (typeof url !== 'string' || !url.startsWith('https://')) {
