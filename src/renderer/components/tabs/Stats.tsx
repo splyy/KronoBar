@@ -4,6 +4,7 @@ import { useSettings } from '../../hooks/useSettings';
 import { useToast } from '../../hooks/useToast';
 import { getCurrencySymbol } from '../../../shared/utils/currency';
 import { IconChevronLeft, IconChevronRight, IconDownloadStroke } from '../common/Icons';
+import { ClientDetailModal } from './ClientDetailModal';
 import type { StatEntry } from '../../../shared/types';
 import styles from './Stats.module.css';
 
@@ -41,6 +42,8 @@ export function Stats() {
   const isCurrentMonth =
     currentDate.getFullYear() === today.getFullYear() &&
     currentDate.getMonth() === today.getMonth();
+
+  const [selectedClient, setSelectedClient] = useState<ClientStats | null>(null);
 
   const [stats, setStats] = useState<StatEntry[]>([]);
   const fetchStats = useCallback(async () => {
@@ -172,7 +175,7 @@ export function Stats() {
           {clientStats.map((cs) => {
             const pct = Math.round((cs.totalMinutes / totalMinutes) * 100);
             return (
-              <div key={cs.clientId} className={styles.clientBar}>
+              <div key={cs.clientId} className={styles.clientBar} onClick={() => setSelectedClient(cs)} style={{ cursor: 'pointer' }}>
                 <div className={styles.clientBarHeader}>
                   <div className={styles.clientBarName}>
                     <span className={styles.dot} style={{ backgroundColor: cs.clientColor }} />
@@ -216,6 +219,20 @@ export function Stats() {
           Exporter {periodLabel} en CSV
         </button>
       </div>
+
+      {/* Client detail modal */}
+      {selectedClient && (
+        <ClientDetailModal
+          clientId={selectedClient.clientId}
+          clientName={selectedClient.clientName}
+          clientColor={selectedClient.clientColor}
+          dailyRate={selectedClient.dailyRate}
+          startDate={start}
+          endDate={end}
+          periodLabel={periodLabel}
+          onClose={() => setSelectedClient(null)}
+        />
+      )}
     </div>
   );
 }

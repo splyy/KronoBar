@@ -108,6 +108,15 @@
 
 .clientBar {
   margin-bottom: 14px;
+  padding: 8px;
+  margin-left: -8px;
+  margin-right: -8px;
+  border-radius: var(--radius-md);
+  transition: background 0.15s;
+}
+
+.clientBar:hover {
+  background: var(--bg-secondary);
 }
 
 .clientBarHeader {

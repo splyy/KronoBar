@@ -3,10 +3,11 @@ import { useTrackingByRange } from '../../hooks/useTracking';
 import { useFormatDuration, useFormatDays } from '../../hooks/useFormatDuration';
 import { useClients } from '../../hooks/useClients';
 import { TimeEntryModal } from '../forms/TimeEntryModal';
+import { ClientDetailModal } from './ClientDetailModal';
 import { EmptyState } from '../common/EmptyState';
 import { AlertDialog } from '../common/AlertDialog';
 import { Tooltip } from '../common/Tooltip';
-import { IconChevronLeft, IconChevronRight, IconPencil, IconTrash, IconFabPlus, IconClipboard } from '../common/Icons';
+import { IconChevronLeft, IconChevronRight, IconPencil, IconTrash, IconFabPlus, IconClipboard, IconTabStats } from '../common/Icons';
 import { getLocalDate } from '../../../shared/utils/date';
 import type { TrackingEntryWithDetails } from '../../../shared/types';
 import styles from './History.module.css';
@@ -75,6 +76,7 @@ export function History() {
   const [clientFilter, setClientFilter] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [editingEntry, setEditingEntry] = useState<TrackingEntryWithDetails | null>(null);
+  const [showClientDetail, setShowClientDetail] = useState(false);
 
   const { start, end } = getDateRange(currentDate, period);
   const { entries, loading, create, update, remove } = useTrackingByRange(
@@ -148,6 +150,12 @@ export function History() {
           {!isCurrentPeriod && (
             <button className={styles.todayBtn} onClick={() => setCurrentDate(new Date())}>
               Aujourd&apos;hui
+            </button>
+          )}
+          {clientFilter != null && (period === 'month' || period === 'year') && (
+            <button className={styles.todayBtn} onClick={() => setShowClientDetail(true)}>
+              <IconTabStats size={12} />
+              Détail client
             </button>
           )}
         </div>
@@ -246,6 +254,24 @@ export function History() {
           onClose={handleModalClose}
         />
       )}
+
+      {/* Client detail modal */}
+      {showClientDetail && clientFilter != null && (() => {
+        const client = clients.find((c) => c.id === clientFilter);
+        if (!client) return null;
+        return (
+          <ClientDetailModal
+            clientId={client.id}
+            clientName={client.name}
+            clientColor={client.color}
+            dailyRate={client.daily_rate}
+            startDate={start}
+            endDate={end}
+            periodLabel={formatPeriodLabel(currentDate, period)}
+            onClose={() => setShowClientDetail(false)}
+          />
+        );
+      })()}
     </div>
   );
 }
