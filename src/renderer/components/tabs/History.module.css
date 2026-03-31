@@ -242,6 +242,15 @@
   line-height: 1.4;
 }
 
+.entryDetail {
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
 /* Badge */
 .badge {
   font-size: var(--font-size-sm);

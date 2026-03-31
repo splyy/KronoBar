@@ -73,6 +73,13 @@ const migrations: Migration[] = [
       `INSERT OR IGNORE INTO settings (key, value) VALUES ('charge_rate', '0')`,
     ],
   },
+  {
+    version: 5,
+    sql: [
+      `ALTER TABLE tracking ADD COLUMN title TEXT`,
+      `UPDATE tracking SET title = description, description = NULL WHERE description IS NOT NULL`,
+    ],
+  },
 ];
 
 export function runMigrations(db: Database): void {

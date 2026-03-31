@@ -20,6 +20,7 @@ export function TimeEntryModal({ date, entry, onSave, onClose }: TimeEntryModalP
   const [projectId, setProjectId] = useState<number | ''>(entry?.project_id ?? '');
   const [hours, setHours] = useState(entry ? Math.floor(entry.duration / 60).toString() : '');
   const [minutes, setMinutes] = useState(entry ? (entry.duration % 60).toString().padStart(2, '0') : '');
+  const [title, setTitle] = useState(entry?.title ?? '');
   const [description, setDescription] = useState(entry?.description ?? '');
   const [entryDate, setEntryDate] = useState(entry?.date ?? date);
   const [saving, setSaving] = useState(false);
@@ -45,6 +46,7 @@ export function TimeEntryModal({ date, entry, onSave, onClose }: TimeEntryModalP
         project_id: projectId as number,
         date: entryDate,
         duration: totalMinutes,
+        title: title.trim() || null,
         description: description.trim() || null,
       });
     } finally {
@@ -94,13 +96,24 @@ export function TimeEntryModal({ date, entry, onSave, onClose }: TimeEntryModalP
             </div>
 
             <div className={styles.formGroup}>
-              <label className={styles.formLabel}>Description</label>
+              <label className={styles.formLabel}>Titre</label>
+              <input
+                type="text"
+                className={styles.formInput}
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Ex: Migration API, Correction bugs…"
+              />
+            </div>
+
+            <div className={styles.formGroup}>
+              <label className={styles.formLabel}>Description (optionnel)</label>
               <input
                 type="text"
                 className={styles.formInput}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Qu'avez-vous fait ?"
+                placeholder="Détail de ce qui a été fait"
               />
             </div>
 

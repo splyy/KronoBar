@@ -22,6 +22,7 @@ export function TimeEntryForm({ date, entry, clients: clientsProp, onSave, onCan
   const [projectId, setProjectId] = useState<number | ''>(entry?.project_id ?? '');
   const [hours, setHours] = useState(entry ? Math.floor(entry.duration / 60).toString() : '');
   const [minutes, setMinutes] = useState(entry ? (entry.duration % 60).toString().padStart(2, '0') : '');
+  const [title, setTitle] = useState(entry?.title ?? '');
   const [description, setDescription] = useState(entry?.description ?? '');
   const [entryDate, setEntryDate] = useState(entry?.date ?? date);
   const [saving, setSaving] = useState(false);
@@ -47,6 +48,7 @@ export function TimeEntryForm({ date, entry, clients: clientsProp, onSave, onCan
         project_id: projectId as number,
         date: entryDate,
         duration: totalMinutes,
+        title: title.trim() || null,
         description: description.trim() || null,
       });
     } finally {
@@ -121,12 +123,23 @@ export function TimeEntryForm({ date, entry, clients: clientsProp, onSave, onCan
       </div>
 
       <div className={styles.field}>
+        <label className={styles.label}>Titre</label>
+        <input
+          type="text"
+          className={styles.input}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Ex: Migration API, Correction bugs…"
+        />
+      </div>
+
+      <div className={styles.field}>
         <label className={styles.label}>Description (optionnel)</label>
         <textarea
           className={styles.textarea}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Qu'avez-vous fait ?"
+          placeholder="Détail de ce qui a été fait"
           rows={2}
         />
       </div>

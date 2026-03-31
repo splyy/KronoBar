@@ -203,8 +203,11 @@ export function History() {
                       <span className={styles.entryProject}>{entry.project_name}</span>
                       <span className={styles.entryClient}>{entry.client_name}</span>
                     </div>
+                    {entry.title && (
+                      <div className={styles.entryDesc}>{entry.title}</div>
+                    )}
                     {entry.description && (
-                      <div className={styles.entryDesc}>{entry.description}</div>
+                      <div className={styles.entryDetail}>{entry.description}</div>
                     )}
                   </div>
                   <span className={styles.badge}>{formatDuration(entry.duration)}</span>

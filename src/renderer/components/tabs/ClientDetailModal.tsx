@@ -7,11 +7,23 @@ import { IconX, IconClipboard } from '../common/Icons';
 import type { TrackingEntryWithDetails } from '../../../shared/types';
 import styles from './ClientDetailModal.module.css';
 
-interface ProjectDetail {
+interface EntryDetail {
+  date: string;
+  description: string | null;
+  duration: number;
+}
+
+interface TitleGroup {
+  title: string | null;
+  totalMinutes: number;
+  entries: EntryDetail[];
+}
+
+interface ProjectGroup {
   projectId: number;
   projectName: string;
   totalMinutes: number;
-  entries: { date: string; description: string | null; duration: number }[];
+  titleGroups: TitleGroup[];
 }
 
 interface ClientDetailModalProps {
@@ -51,22 +63,32 @@ export function ClientDetailModal({
     fetchEntries();
   }, [fetchEntries]);
 
-  const projects = useMemo<ProjectDetail[]>(() => {
-    const map = new Map<number, ProjectDetail>();
+  const projects = useMemo<ProjectGroup[]>(() => {
+    const projectMap = new Map<number, ProjectGroup>();
     for (const e of entries) {
-      let p = map.get(e.project_id);
-      if (!p) {
-        p = { projectId: e.project_id, projectName: e.project_name, totalMinutes: 0, entries: [] };
-        map.set(e.project_id, p);
+      let proj = projectMap.get(e.project_id);
+      if (!proj) {
+        proj = { projectId: e.project_id, projectName: e.project_name, totalMinutes: 0, titleGroups: [] };
+        projectMap.set(e.project_id, proj);
       }
-      p.totalMinutes += e.duration;
-      p.entries.push({ date: e.date, description: e.description, duration: e.duration });
+      proj.totalMinutes += e.duration;
+
+      const titleKey = e.title ?? '';
+      let tg = proj.titleGroups.find((t) => (t.title ?? '') === titleKey);
+      if (!tg) {
+        tg = { title: e.title, totalMinutes: 0, entries: [] };
+        proj.titleGroups.push(tg);
+      }
+      tg.totalMinutes += e.duration;
+      tg.entries.push({ date: e.date, description: e.description, duration: e.duration });
     }
-    // Sort entries by date within each project
-    for (const p of map.values()) {
-      p.entries.sort((a, b) => a.date.localeCompare(b.date));
+    for (const proj of projectMap.values()) {
+      proj.titleGroups.sort((a, b) => b.totalMinutes - a.totalMinutes);
+      for (const tg of proj.titleGroups) {
+        tg.entries.sort((a, b) => a.date.localeCompare(b.date));
+      }
     }
-    return Array.from(map.values()).sort((a, b) => b.totalMinutes - a.totalMinutes);
+    return Array.from(projectMap.values()).sort((a, b) => b.totalMinutes - a.totalMinutes);
   }, [entries]);
 
   const totalMinutes = projects.reduce((sum, p) => sum + p.totalMinutes, 0);
@@ -80,13 +102,19 @@ export function ClientDetailModal({
     const lines: string[] = [];
     lines.push(`${clientName} — ${periodLabel}`);
     lines.push('');
-    for (const p of projects) {
-      lines.push(`${p.projectName} — ${formatDuration(p.totalMinutes)} (${formatDays(p.totalMinutes)})`);
-      for (const e of p.entries) {
-        const d = new Date(e.date + 'T00:00:00');
-        const dateLabel = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
-        const desc = e.description ? ` — ${e.description}` : '';
-        lines.push(`  ${dateLabel} : ${formatDuration(e.duration)}${desc}`);
+    for (const proj of projects) {
+      lines.push(`${proj.projectName} — ${formatDuration(proj.totalMinutes)} (${formatDays(proj.totalMinutes)})`);
+      for (const tg of proj.titleGroups) {
+        if (tg.title) {
+          lines.push(`  ${tg.title} — ${formatDuration(tg.totalMinutes)}`);
+        }
+        for (const e of tg.entries) {
+          const d = new Date(e.date + 'T00:00:00');
+          const dateLabel = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+          const desc = e.description ? ` — ${e.description}` : '';
+          const indent = tg.title ? '    ' : '  ';
+          lines.push(`${indent}${dateLabel} : ${formatDuration(e.duration)}${desc}`);
+        }
       }
       lines.push('');
     }
@@ -143,23 +171,33 @@ export function ClientDetailModal({
           )}
         </div>
 
-        {/* Projects detail */}
+        {/* Projects → title groups → entries */}
         <div className={styles.content}>
-          {projects.map((p) => (
-            <div key={p.projectId} className={styles.projectSection}>
+          {projects.map((proj) => (
+            <div key={proj.projectId} className={styles.projectSection}>
               <div className={styles.projectHeader}>
-                <span className={styles.projectName}>{p.projectName}</span>
-                <span className={styles.projectTime}>{formatDuration(p.totalMinutes)}</span>
+                <span className={styles.projectName}>{proj.projectName}</span>
+                <span className={styles.projectTime}>{formatDuration(proj.totalMinutes)}</span>
               </div>
-              <div className={styles.descriptions}>
-                {p.entries.map((e, i) => (
-                  <div key={i} className={styles.descItem}>
-                    <span className={styles.descDate}>{formatDate(e.date)}</span>
-                    <span className={styles.descDuration}>{formatDuration(e.duration)}</span>
-                    {e.description && <span className={styles.descText}>{e.description}</span>}
+              {proj.titleGroups.map((tg, idx) => (
+                <div key={idx} className={styles.titleGroup}>
+                  {tg.title && (
+                    <div className={styles.titleHeader}>
+                      <span className={styles.titleName}>{tg.title}</span>
+                      <span className={styles.titleTime}>{formatDuration(tg.totalMinutes)}</span>
+                    </div>
+                  )}
+                  <div className={styles.descriptions}>
+                    {tg.entries.map((e, i) => (
+                      <div key={i} className={styles.descItem}>
+                        <span className={styles.descDate}>{formatDate(e.date)}</span>
+                        <span className={styles.descDuration}>{formatDuration(e.duration)}</span>
+                        {e.description && <span className={styles.descText}>{e.description}</span>}
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           ))}
         </div>

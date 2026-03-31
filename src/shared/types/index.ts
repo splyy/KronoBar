@@ -38,6 +38,7 @@ export interface TrackingEntry {
   project_id: number;
   date: string;
   duration: number;
+  title: string | null;
   description: string | null;
   created_at: string;
   updated_at: string;
@@ -54,6 +55,7 @@ export interface TrackingEntryInput {
   project_id: number;
   date: string;
   duration: number;
+  title?: string | null;
   description?: string | null;
 }
 

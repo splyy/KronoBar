@@ -56,8 +56,8 @@ export function createTrackingEntry(input: TrackingEntryInput): TrackingEntry {
   const db = getDatabase();
   const { lastId } = run(
     db,
-    'INSERT INTO tracking (project_id, date, duration, description) VALUES (?, ?, ?, ?)',
-    [input.project_id, input.date, input.duration, input.description ?? null]
+    'INSERT INTO tracking (project_id, date, duration, title, description) VALUES (?, ?, ?, ?, ?)',
+    [input.project_id, input.date, input.duration, input.title ?? null, input.description ?? null]
   );
   saveDatabase();
   return getTrackingEntry(lastId)!;
@@ -67,8 +67,8 @@ export function updateTrackingEntry(id: number, input: TrackingEntryInput): Trac
   const db = getDatabase();
   run(
     db,
-    `UPDATE tracking SET project_id = ?, date = ?, duration = ?, description = ?, updated_at = datetime('now') WHERE id = ?`,
-    [input.project_id, input.date, input.duration, input.description ?? null, id]
+    `UPDATE tracking SET project_id = ?, date = ?, duration = ?, title = ?, description = ?, updated_at = datetime('now') WHERE id = ?`,
+    [input.project_id, input.date, input.duration, input.title ?? null, input.description ?? null, id]
   );
   saveDatabase();
   return getTrackingEntry(id)!;
@@ -95,7 +95,7 @@ export function exportTrackingData(
   endDate: string,
 ): { headers: string[]; rows: string[][] } {
   const db = getDatabase();
-  const entries = queryAll<TrackingEntryWithDetails & { daily_rate: number | null }>(
+  const entries = queryAll<TrackingEntryWithDetails & { daily_rate: number | null; title: string | null }>(
     db,
     `SELECT te.*, p.name as project_name, p.client_id, c.name as client_name, c.color as client_color, c.daily_rate
      FROM tracking te
@@ -106,11 +106,12 @@ export function exportTrackingData(
     [startDate, endDate],
   );
 
-  const headers = ['Date', 'Client', 'Projet', 'Durée (min)', 'Durée (h)', 'TJM', 'Description'];
+  const headers = ['Date', 'Client', 'Projet', 'Titre', 'Durée (min)', 'Durée (h)', 'TJM', 'Description'];
   const rows = entries.map((e) => [
     e.date,
     e.client_name,
     e.project_name,
+    e.title ?? '',
     String(e.duration),
     (e.duration / 60).toFixed(2),
     e.daily_rate != null ? String(e.daily_rate) : '',
@@ -157,7 +158,7 @@ export function exportAllData(): {
   };
 
   // All tracking entries
-  const entries = queryAll<TrackingEntryWithDetails & { daily_rate: number | null }>(
+  const entries = queryAll<TrackingEntryWithDetails & { daily_rate: number | null; title: string | null }>(
     db,
     `SELECT te.*, p.name as project_name, p.client_id, c.name as client_name, c.color as client_color, c.daily_rate
      FROM tracking te
@@ -166,9 +167,10 @@ export function exportAllData(): {
      ORDER BY te.date ASC, c.name ASC, p.name ASC`
   );
   const trackingData = {
-    headers: ['Date', 'Client', 'Projet', 'Durée (min)', 'Durée (h)', 'TJM', 'Description'],
+    headers: ['Date', 'Client', 'Projet', 'Titre', 'Durée (min)', 'Durée (h)', 'TJM', 'Description'],
     rows: entries.map(e => [
       e.date, e.client_name, e.project_name,
+      e.title ?? '',
       String(e.duration), (e.duration / 60).toFixed(2),
       e.daily_rate != null ? String(e.daily_rate) : '',
       e.description ?? '',

@@ -155,6 +155,31 @@
   color: var(--text-primary);
 }
 
+/* Title sub-group */
+.titleGroup {
+  margin-top: 4px;
+}
+
+.titleHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.titleName {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.titleTime {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+}
+
 .projectTime {
   font-size: var(--font-size-sm);
   font-weight: 600;
