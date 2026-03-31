@@ -81,18 +81,16 @@ export function ClientDetailModal({
     lines.push(`${clientName} — ${periodLabel}`);
     lines.push('');
     for (const p of projects) {
-      lines.push(`${p.projectName} — ${formatDuration(p.totalMinutes)} (${formatDays(p.totalMinutes)}j)`);
-      const descs = p.entries.filter((e) => e.description);
-      if (descs.length > 0) {
-        for (const e of descs) {
-          const d = new Date(e.date + 'T00:00:00');
-          const dateLabel = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
-          lines.push(`  ${dateLabel} : ${e.description}`);
-        }
+      lines.push(`${p.projectName} — ${formatDuration(p.totalMinutes)} (${formatDays(p.totalMinutes)})`);
+      for (const e of p.entries) {
+        const d = new Date(e.date + 'T00:00:00');
+        const dateLabel = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+        const desc = e.description ? ` — ${e.description}` : '';
+        lines.push(`  ${dateLabel} : ${formatDuration(e.duration)}${desc}`);
       }
       lines.push('');
     }
-    lines.push(`Total : ${formatDuration(totalMinutes)} (${formatDays(totalMinutes)}j)`);
+    lines.push(`Total : ${formatDuration(totalMinutes)} (${formatDays(totalMinutes)})`);
     if (revenue != null) {
       lines.push(`Revenu : ${Math.round(revenue)}${currencySymbol}`);
     }
@@ -131,7 +129,7 @@ export function ClientDetailModal({
           </div>
           <div className={styles.summaryItem}>
             <span className={styles.summaryLabel}>Jours</span>
-            <span className={styles.summaryValue}>{formatDays(totalMinutes)}j</span>
+            <span className={styles.summaryValue}>{formatDays(totalMinutes)}</span>
           </div>
           <div className={styles.summaryItem}>
             <span className={styles.summaryLabel}>Projets</span>
@@ -153,20 +151,15 @@ export function ClientDetailModal({
                 <span className={styles.projectName}>{p.projectName}</span>
                 <span className={styles.projectTime}>{formatDuration(p.totalMinutes)}</span>
               </div>
-              {p.entries.some((e) => e.description) ? (
-                <div className={styles.descriptions}>
-                  {p.entries
-                    .filter((e) => e.description)
-                    .map((e, i) => (
-                      <div key={i} className={styles.descItem}>
-                        <span className={styles.descDate}>{formatDate(e.date)}</span>
-                        <span className={styles.descText}>{e.description}</span>
-                      </div>
-                    ))}
-                </div>
-              ) : (
-                <div className={styles.noDesc}>Aucune description</div>
-              )}
+              <div className={styles.descriptions}>
+                {p.entries.map((e, i) => (
+                  <div key={i} className={styles.descItem}>
+                    <span className={styles.descDate}>{formatDate(e.date)}</span>
+                    <span className={styles.descDuration}>{formatDuration(e.duration)}</span>
+                    {e.description && <span className={styles.descText}>{e.description}</span>}
+                  </div>
+                ))}
+              </div>
             </div>
           ))}
         </div>

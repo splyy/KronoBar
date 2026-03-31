@@ -188,15 +188,18 @@
   flex-shrink: 0;
 }
 
+.descDuration {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 .descText {
   flex: 1;
   min-width: 0;
-}
-
-.noDesc {
-  font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
-  font-style: italic;
 }
 
 /* Copy button */
