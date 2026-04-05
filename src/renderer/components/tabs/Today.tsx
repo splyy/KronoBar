@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTracking } from '../../hooks/useTracking';
 import { useFormatDuration, useFormatDays } from '../../hooks/useFormatDuration';
 import { EmptyState } from '../common/EmptyState';
@@ -17,8 +17,29 @@ interface ClientSummary {
   totalMinutes: number;
 }
 
+function useToday(): string {
+  const [today, setToday] = useState(getLocalDate);
+
+  const check = useCallback(() => {
+    setToday((prev) => {
+      const now = getLocalDate();
+      return now !== prev ? now : prev;
+    });
+  }, []);
+
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') check();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => document.removeEventListener('visibilitychange', onVisible);
+  }, [check]);
+
+  return today;
+}
+
 export function Today() {
-  const today = getLocalDate();
+  const today = useToday();
   const { entries, totalMinutes, loading, create, update, remove } = useTracking(today);
   const formatDuration = useFormatDuration();
   const formatDays = useFormatDays();
